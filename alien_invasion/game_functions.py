@@ -102,14 +102,15 @@ def update_bullets(ai_settings,screen,ship,aliens,bullets):
 	check_bullet_alien_collisions(ai_settings,screen,ship,aliens,bullets)
 
 def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
-	"""Respond to bullet-alien collisions.""" 
-	# Check for any bullets that have hit aliens
-	# If so, get rid of the bullet and the alien
-	collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
-	if len(aliens) == 0:
-		# Destroy existing bullets and create new fleet
-		bullets.empty()
-		create_fleet(ai_settings, screen, ship, aliens)
+    """Respond to bullet-alien collisions.""" 
+    # Check for any bullets that have hit aliens
+    # If so, get rid of the bullet and the alien
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    if len(aliens) == 0:
+        # Destroy existing bullets and create new fleet
+        bullets.empty()
+        ai_settings.increase_speed()
+        create_fleet(ai_settings, screen, ship, aliens)
 
 def update_screen(ai_settings,screen,stats,ship,aliens,bullets,play_button):
 	"""Update images on the screen and flip to the new screen."""
