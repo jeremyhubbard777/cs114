@@ -12,15 +12,15 @@ def run_game():
     pygame.init()
     ai_settings = Settings()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
-    pygame.display.set_caption("New Game")
+    pygame.display.set_caption("Hell")
 
     # Make the Play button
-    play_button = Button(ai_settings, screen, "Kill Your Self") 
+    play_button = Button(ai_settings, screen, "start") 
 
     # Make a ship and group of bullets
     ship = Ship(ai_settings, screen)
     bullets = Group()
-    # Make a boss.
+	# Make a boss.
     boss = Boss(ai_settings, screen)
     # Create an instance to store game statistics
     stats = GameStats(ai_settings)
@@ -28,9 +28,9 @@ def run_game():
     while True:
         gf.check_events(ai_settings,screen,stats,play_button,ship,bullets)
 
-        if stats.game_active:
+        if stats.game_active and ai_settings.boss_health > 0:
             ship.update()
-            gf.update_bullets(ai_settings,screen,ship,bullets)		
+            gf.update_bullets(ai_settings,screen,ship,boss,bullets)		
             gf.update_boss(ai_settings, screen, ship, boss, bullets)
         gf.update_screen(ai_settings,screen,stats,ship,boss,bullets,play_button)
 
