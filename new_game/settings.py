@@ -10,6 +10,10 @@ class Settings():
         # Ship settings
         self.ship_speed_factor = 4
         self.ship_limit = 3
+        
+        # boss movement settings
+        self.boss_speed_factor = 5
+        self.boss_direction = 1
 
         #bullet settings
         self.bullet_speed_factor = 5
