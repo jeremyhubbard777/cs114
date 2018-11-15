@@ -5,23 +5,23 @@ from boss import Boss
 import pygame
 
 def check_keydown_events(event,ai_settings,screen,ship,bullets):
-	"""Respond to keypresses."""
-	if event.key == pygame.K_d:
-		ship.moving_right = True
-	elif event.key == pygame.K_a:
-		ship.moving_left = True
-	elif event.key == pygame.K_w:
-		ship.moving_up = True
-	elif event.key == pygame.K_s:
-		ship.moving_down = True
-	elif event.key == pygame.K_LSHIFT:
-		ship.is_moving_slow = True
-		new_speed = ship.ai_settings.ship_slow_speed
-		ship.ai_settings.ship_speed_factor = new_speed
-	elif event.key == pygame.K_SPACE:
-		fire_bullet(ai_settings,screen,ship,bullets)
-	elif event.key == pygame.K_ESCAPE:
-		sys.exit()
+    """Respond to keypresses."""
+    if event.key == pygame.K_d:
+        ship.moving_right = True
+    elif event.key == pygame.K_a:
+        ship.moving_left = True
+    elif event.key == pygame.K_w:
+        ship.moving_up = True
+    elif event.key == pygame.K_s:
+        ship.moving_down = True
+    elif event.key == pygame.K_LSHIFT:
+        ship.moving_slow = True
+        new_speed = ship.ai_settings.ship_slow_speed
+        ship.ai_settings.ship_speed_factor = new_speed
+    elif event.key == pygame.K_SPACE:
+        fire_bullet(ai_settings,screen,ship,bullets)
+    elif event.key == pygame.K_ESCAPE:
+        sys.exit()
 
 def check_keyup_events(event, ship):
 	"""Respond to key releases."""
@@ -34,7 +34,7 @@ def check_keyup_events(event, ship):
 	elif event.key == pygame.K_s:
 		ship.moving_down = False
 	elif event.key == pygame.K_LSHIFT:
-		ship.is_moving_slow = False
+		ship.moving_slow = False
 		ship.ai_settings.ship_speed_factor = ship.ai_settings.ship_default_speed
 
 		
