@@ -25,7 +25,7 @@ class Ship():
         self.moving_up = False
         self.moving_down = False
         self.moving_slow = False
-
+        self.shooting = False
 
 
     def update(self):

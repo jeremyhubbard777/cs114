@@ -1,7 +1,7 @@
 import sys
-from time import sleep
 from bullet import Bullet
 from boss import Boss
+from boss_bullet import Boss_bullet
 import pygame
 
 def check_keydown_events(event,ai_settings,screen,ship,bullets):
@@ -19,24 +19,25 @@ def check_keydown_events(event,ai_settings,screen,ship,bullets):
         new_speed = ship.ai_settings.ship_slow_speed
         ship.ai_settings.ship_speed_factor = new_speed
     elif event.key == pygame.K_SPACE:
-        fire_bullet(ai_settings,screen,ship,bullets)
+        ship.shooting = True
     elif event.key == pygame.K_ESCAPE:
         sys.exit()
 
 def check_keyup_events(event, ship):
-	"""Respond to key releases."""
-	if event.key == pygame.K_d:
-		ship.moving_right = False
-	elif event.key == pygame.K_a:
-		ship.moving_left = False
-	elif event.key == pygame.K_w:
-		ship.moving_up = False
-	elif event.key == pygame.K_s:
-		ship.moving_down = False
-	elif event.key == pygame.K_LSHIFT:
-		ship.moving_slow = False
-		ship.ai_settings.ship_speed_factor = ship.ai_settings.ship_default_speed
-
+    """Respond to key releases."""
+    if event.key == pygame.K_d:
+        ship.moving_right = False
+    elif event.key == pygame.K_a:
+        ship.moving_left = False
+    elif event.key == pygame.K_w:
+        ship.moving_up = False
+    elif event.key == pygame.K_s:
+        ship.moving_down = False
+    elif event.key == pygame.K_SPACE:
+        ship.shooting = False
+    elif event.key == pygame.K_LSHIFT:
+        ship.moving_slow = False
+        ship.ai_settings.ship_speed_factor = ship.ai_settings.ship_default_speed
 		
 def check_events(ai_settings,screen,stats,play_button,ship,bullets):
 	"""Respond to keypresses and mouse events."""
@@ -73,16 +74,14 @@ def check_play_button(ai_settings,screen,stats,play_button,ship,bullets,mouse_x,
         stats.game_active = True
         #empty the list of bullets
         bullets.empty()
-        # Create a new fleet and center the ship
+        #center the ship
         ship.center_ship()
-
 
 def fire_bullet(ai_settings,screen,ship,bullets):
 	"""fires as bullet"""
 	if len(bullets) < ai_settings.bullets_allowed:
 			new_bullet = Bullet(ai_settings,screen,ship)
 			bullets.add(new_bullet)
-
 
 def create_boss(ai_settings,screen,boss):
 	"""create an alien and place it in the row"""
@@ -111,7 +110,6 @@ def update_boss(ai_settings, screen, ship, boss, bullets):
 	"""Update the postions of the boss."""
 	check_boss_edges(ai_settings, boss)
 	boss.update()
-	
     
 def update_screen(ai_settings,screen,stats,ship,boss,bullets,play_button):
     """Update images on the screen and flip to the new screen."""
@@ -121,6 +119,9 @@ def update_screen(ai_settings,screen,stats,ship,boss,bullets,play_button):
         bullet.draw_bullet()
     ship.blitme()
     boss.blitme()
+    if ship.shooting:
+        fire_bullet(ai_settings,screen,ship,bullets)
+        
     # Draw the play button if the game is inactive
     if not stats.game_active:
         play_button.draw_button() 
