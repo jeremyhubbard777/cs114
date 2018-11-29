@@ -9,7 +9,7 @@ class Boss_bullet(Sprite):
 		
 		self.rect = pygame.Rect(0,0,ai_settings.boss_bullet_width, ai_settings.boss_bullet_height)
 		self.rect.centerx = boss.rect.centerx
-		self.rect.top = boss.rect.top
+		self.rect.top = boss.rect.bottom
 		
 		self.y = float(self.rect.y)
 		

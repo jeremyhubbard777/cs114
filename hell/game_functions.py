@@ -61,7 +61,7 @@ def check_bullet_hit(ai_settings, screen, ship, boss, bullets,):
 		collisions.remove(bullets)
 		if boss.ai_settings.boss_health > 0:
 			boss.ai_settings.boss_health -= boss.ai_settings.bullet_dmg
-			print(boss.ai_settings.boss_health)
+			print(boss.ai_settings.boss_health,'hp left')
 
 def check_play_button(ai_settings,screen,stats,play_button,ship,bullets,mouse_x,mouse_y):
     """Start a new game when the player clicks Play."""
@@ -97,6 +97,39 @@ def check_boss_edges(ai_settings, boss):
     if boss.check_edges():
         ai_settings.boss_direction *= -1
 
+def update_counter(ai_counter):
+    if ai_counter < 300:
+        ai_counter += 1
+    else:
+        ai_counter = 0
+    return ai_counter
+
+def update_boss_ai(ai_settings,screen,boss,boss_bullets,ai_counter):
+    if ai_counter > 60 and ai_counter < 120:
+        boss_shoot(ai_settings,screen,boss,boss_bullets)
+        print(boss_bullets)
+    elif ai_counter > 120 and ai_counter < 180:
+        #boss_shoot(ai_settings,screen,boss,boss_bullets)
+        print(boss_bullets)
+    elif ai_counter > 180 and ai_counter < 240:
+        boss_shoot(ai_settings,screen,boss,boss_bullets)
+        print(boss_bullets)
+
+        
+def boss_shoot(ai_settings,screen,boss,boss_bullets):
+    """lets the boss shoot"""
+    new_boss_bullet = Boss_bullet(ai_settings,screen,boss)
+    boss_bullets.add(new_boss_bullet)
+        
+
+def update_boss_bullets(ai_settings,screen,ship,boss,boss_bullets):
+    """updates the position and getsrid of old boss bullets"""
+    #update the bullets position
+    boss_bullets.update()
+    for boss_bullet in boss_bullets.copy():
+        if boss_bullet.rect.top >=ai_settings.screen_height:
+            boss_bullets.remove(boss_bullet)
+    
 def update_bullets(ai_settings,screen,ship,boss,bullets):
 	"""updates the position and gets rid of old bullets"""
 	#update the bullet position
@@ -111,10 +144,12 @@ def update_boss(ai_settings, screen, ship, boss, bullets):
 	check_boss_edges(ai_settings, boss)
 	boss.update()
     
-def update_screen(ai_settings,screen,stats,ship,boss,bullets,play_button):
+def update_screen(ai_settings,screen,stats,ship,boss,boss_bullets,bullets,play_button):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
     screen.fill(ai_settings.bg_color)
+    for boss_bullet in boss_bullets.sprites():
+        boss_bullet.draw_bullet()
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
@@ -123,7 +158,7 @@ def update_screen(ai_settings,screen,stats,ship,boss,bullets,play_button):
         fire_bullet(ai_settings,screen,ship,bullets)
         
     # Draw the play button if the game is inactive
-    if not stats.game_active:
+    if stats.game_active == False:
         play_button.draw_button() 
 
     # Make the most recently drawn screen visible.

@@ -15,7 +15,7 @@ class Settings():
         # boss1 settings
         self.boss_speed_factor = 2.5
         self.boss_direction = 1
-        self.boss_health = 25000
+        self.boss_health = 2500
         
         #bullet settings
         self.bullet_speed_factor = 15
@@ -27,6 +27,6 @@ class Settings():
 
         #boss bullet settings
         self.boss_bullet_speed_factor = 5
-        self.boss_bullet_width = 5
-        self.boss_bullet_height = 25
+        self.boss_bullet_width = 20
+        self.boss_bullet_height = 50
         self.boss_bullet_color = 250, 250, 250
