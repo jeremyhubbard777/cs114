@@ -52,17 +52,41 @@ def check_events(ai_settings,screen,stats,play_button,ship,bullets):
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			check_play_button(ai_settings,screen,stats,play_button,ship,bullets,mouse_x,mouse_y)
 		
-def check_bullet_hit(ai_settings, screen, ship, boss, bullets,):
-	"""Respond to bullet-boss collisions.""" 
-	# Check for any bullets that have hit the boss
-	#if so subtract from the bosses health
-	collisions = pygame.sprite.spritecollideany(boss, bullets)
-	if collisions:
-		collisions.remove(bullets)
-		if boss.ai_settings.boss_health > 0:
-			boss.ai_settings.boss_health -= boss.ai_settings.bullet_dmg
-			print(boss.ai_settings.boss_health,'hp left')
+def ship_hit(ai_settings, stats, screen, ship, boss, bullets,boss_bullets):
+    """Respond to ship being hit."""
+    if stats.ships_left > 1:	
+        # Decrement ships_left
+        stats.ships_left -= 1
+        # Empty the list of bullets
+        bullets.empty()
+        boss_bullets.empty()
+        #center the ship.
+        ship.center_ship()
+        # Pause.
+        #sleep(0.5)
+    else:
+        stats.game_active = False
+        pygame.mouse.set_visible(True)
 
+def check_bullet_hit(ai_settings, screen, ship, boss, bullets):
+    """Respond to bullet-boss collisions.""" 
+    # Check for any bullets that have hit the boss
+    # if so subtract from the bosses health
+    collisions = pygame.sprite.spritecollideany(boss, bullets)
+    if collisions:
+        collisions.remove(bullets)
+        if boss.ai_settings.boss_health > 0:
+            boss.ai_settings.boss_health -= boss.ai_settings.bullet_dmg
+            print(boss.ai_settings.boss_health,'hp left')
+
+def check_boss_bullet_hit(ai_settings, stats, screen, ship, boss, bullets, boss_bullets):
+    """Respond to boss bullet-ship collisions"""
+    # Check for any bullets that have hit the ship
+    collision = pygame.sprite.spritecollideany(ship, boss_bullets)
+    if collision:
+        collision.remove(boss_bullets)
+        ship_hit(ai_settings, stats, screen, ship, boss, bullets,boss_bullets)
+            
 def check_play_button(ai_settings,screen,stats,play_button,ship,bullets,mouse_x,mouse_y):
     """Start a new game when the player clicks Play."""
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
@@ -98,37 +122,28 @@ def check_boss_edges(ai_settings, boss):
         ai_settings.boss_direction *= -1
 
 def update_counter(ai_counter):
-    if ai_counter < 300:
+    """adds to the cunter per frame"""
+    if ai_counter < 140:
         ai_counter += 1
     else:
-        ai_counter = 0
+        ai_counter = 60
     return ai_counter
 
-def update_boss_ai(ai_settings,screen,boss,boss_bullets,ai_counter):
-    if ai_counter > 60 and ai_counter < 120:
-        boss_shoot(ai_settings,screen,boss,boss_bullets)
-        print(boss_bullets)
-    elif ai_counter > 120 and ai_counter < 180:
-        #boss_shoot(ai_settings,screen,boss,boss_bullets)
-        print(boss_bullets)
-    elif ai_counter > 180 and ai_counter < 240:
-        boss_shoot(ai_settings,screen,boss,boss_bullets)
-        print(boss_bullets)
 
-        
 def boss_shoot(ai_settings,screen,boss,boss_bullets):
     """lets the boss shoot"""
     new_boss_bullet = Boss_bullet(ai_settings,screen,boss)
-    boss_bullets.add(new_boss_bullet)
-        
+    boss_bullets.add(new_boss_bullet)    
 
-def update_boss_bullets(ai_settings,screen,ship,boss,boss_bullets):
-    """updates the position and getsrid of old boss bullets"""
+def update_boss_bullets(ai_settings, stats, screen, ship, boss, bullets, boss_bullets):
+    """updates the position and gets rid of old boss bullets"""
     #update the bullets position
     boss_bullets.update()
     for boss_bullet in boss_bullets.copy():
         if boss_bullet.rect.top >=ai_settings.screen_height:
             boss_bullets.remove(boss_bullet)
+    check_boss_bullet_hit(ai_settings, stats, screen, ship, boss, bullets, boss_bullets)
+    
     
 def update_bullets(ai_settings,screen,ship,boss,bullets):
 	"""updates the position and gets rid of old bullets"""
@@ -139,11 +154,11 @@ def update_bullets(ai_settings,screen,ship,boss,bullets):
 			bullets.remove(bullet)
 	check_bullet_hit(ai_settings, screen, ship, boss, bullets)
 
-def update_boss(ai_settings, screen, ship, boss, bullets):
+def update_boss(ai_settings,ai_counter, screen, ship, boss, bullets):
 	"""Update the postions of the boss."""
 	check_boss_edges(ai_settings, boss)
-	boss.update()
-    
+	boss.update(ai_counter)
+
 def update_screen(ai_settings,screen,stats,ship,boss,boss_bullets,bullets,play_button):
     """Update images on the screen and flip to the new screen."""
     # Redraw the screen during each pass through the loop.
@@ -163,3 +178,16 @@ def update_screen(ai_settings,screen,stats,ship,boss,boss_bullets,bullets,play_b
 
     # Make the most recently drawn screen visible.
     pygame.display.flip()
+
+def update_boss_ai(ai_settings,screen,boss,boss_bullets,ai_counter):
+    """the boss's ai per frame"""
+    if ai_counter == 60:
+        boss_shoot(ai_settings,screen,boss,boss_bullets)
+    elif ai_counter == 80:
+        boss_shoot(ai_settings,screen,boss,boss_bullets)
+    elif ai_counter == 100:
+        boss_shoot(ai_settings,screen,boss,boss_bullets)
+    elif ai_counter > 120 and ai_counter < 130:
+        ai_settings.boss_bullet_speed_factor = 7
+        boss_shoot(ai_settings,screen,boss,boss_bullets)
+        ai_settings.boss_bullet_speed_factor = 5

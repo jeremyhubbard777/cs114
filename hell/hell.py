@@ -31,16 +31,15 @@ def run_game():
     # Start the main loop for the game.
     while True:
         gf.check_events(ai_settings,screen,stats,play_button,ship,bullets)
-
+        
         if stats.game_active and ai_settings.boss_health > 0:
             clock.tick(60)
             ai_counter = gf.update_counter(ai_counter)
-            print(ai_counter)
             gf.update_boss_ai(ai_settings,screen,boss,boss_bullets,ai_counter)
             ship.update()
             gf.update_bullets(ai_settings,screen,ship,boss,bullets)		
-            gf.update_boss(ai_settings, screen, ship, boss, bullets)
-            gf.update_boss_bullets(ai_settings,screen,ship,boss,boss_bullets)
+            gf.update_boss(ai_settings,ai_counter, screen, ship, boss, bullets)
+            gf.update_boss_bullets(ai_settings, stats, screen, ship, boss, bullets, boss_bullets)
         else:
             stats.game_active = False
             pygame.mouse.set_visible(True)

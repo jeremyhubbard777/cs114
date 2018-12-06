@@ -21,11 +21,12 @@ class Boss(Sprite):
         # Store the boss's exact position.
         self.x = float(self.rect.x)
     
-    def update(self):
+    def update(self,ai_counter):
         """Move the boss right or left"""
-        self.x += (self.ai_settings.boss_speed_factor * 
+        if ai_counter < 120:
+            self.x += (self.ai_settings.boss_speed_factor * 
 						self.ai_settings.boss_direction)
-        self.rect.x = self.x
+            self.rect.x = self.x
 
 
     def check_edges(self):

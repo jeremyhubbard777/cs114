@@ -7,18 +7,18 @@ class Settings():
         self.bg_color = (0, 0, 0)
 
         # Ship settings
-        self.ship_default_speed = 7
-        self.ship_speed_factor = 7
+        self.ship_default_speed = 10
+        self.ship_speed_factor = 10
         self.ship_slow_speed = 2.7
         self.ship_limit = 3
 
         # boss1 settings
-        self.boss_speed_factor = 2.5
+        self.boss_speed_factor = 10
         self.boss_direction = 1
         self.boss_health = 2500
         
         #bullet settings
-        self.bullet_speed_factor = 15
+        self.bullet_speed_factor = 10
         self.bullet_width = 2
         self.bullet_height = 10
         self.bullet_color = 250, 0, 0
@@ -27,6 +27,6 @@ class Settings():
 
         #boss bullet settings
         self.boss_bullet_speed_factor = 5
-        self.boss_bullet_width = 20
+        self.boss_bullet_width = 50
         self.boss_bullet_height = 50
         self.boss_bullet_color = 250, 250, 250
